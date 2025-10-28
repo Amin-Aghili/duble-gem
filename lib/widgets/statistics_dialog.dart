@@ -47,19 +47,23 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
             Text('تعداد دیالوگ‌های خوانده شده: ${provider.doneDialogs}'),
             Text('درصد پیشرفت: ${provider.totalPercent.toStringAsFixed(2)}%'),
             const Divider(),
-            ...actors.map((actor) => Text(
-                '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%)')),
+            ...actors.map((actor) {
+              final rate = double.tryParse(_rateController.text) ?? 0;
+              final payment = provider.actorDone(actor) * rate;
+              return Text(
+                  '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%) - ${payment.toStringAsFixed(2)} لیر');
+            }),
             const Divider(),
             TextField(
               controller: _rateController,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(
                 labelText: 'نرخ هر دیالوگ',
-                suffixText: 'تومان',
+                suffixText: 'لیر',
               ),
             ),
             const SizedBox(height: 16),
-            Text('مبلغ کل پرداختی: ${_totalPayment.toStringAsFixed(2)} تومان'),
+            Text('مبلغ کل پرداختی: ${_totalPayment.toStringAsFixed(2)} لیر'),
           ],
         ),
       ),
