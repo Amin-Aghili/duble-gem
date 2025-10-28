@@ -6,7 +6,7 @@ class StatisticsDialog extends StatefulWidget {
   const StatisticsDialog({super.key});
 
   @override
-  _StatisticsDialogState createState() => _StatisticsDialogState();
+  State<StatisticsDialog> createState() => _StatisticsDialogState();
 }
 
 class _StatisticsDialogState extends State<StatisticsDialog> {
@@ -36,7 +36,8 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<DialogProvider>();
-    final actors = provider.dialogs.map((e) => e.actor).toSet().toList()..sort();
+    final actors =
+        provider.dialogs.map((e) => e.actor).toSet().toList()..sort();
 
     return AlertDialog(
       title: const Text('آمار'),
@@ -60,7 +61,8 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
               final rate = double.tryParse(_rateController.text) ?? 0;
               final payment = provider.actorTotal(actor) * rate;
               return Text(
-                  '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%) - ${payment.toStringAsFixed(2)} لیر');
+                '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%) - ${payment.toStringAsFixed(2)} لیر',
+              );
             }),
             const Divider(),
             Text('مبلغ کل پرداختی: ${_totalPayment.toStringAsFixed(2)} لیر'),

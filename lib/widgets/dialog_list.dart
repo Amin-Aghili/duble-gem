@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 
 class DialogList extends StatelessWidget {
+  const DialogList({super.key});
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<DialogProvider>();
