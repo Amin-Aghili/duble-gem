@@ -56,7 +56,7 @@ class ActorSelector extends StatelessWidget {
             child: Slider(
               value: provider.fontSize,
               min: 12,
-              max: 30,
+              max: 38,
               onChanged: (val) {
                 provider.changeFontSize(val);
               },

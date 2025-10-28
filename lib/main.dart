@@ -55,7 +55,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.onThemeChanged});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -71,7 +71,9 @@ class _HomePageState extends State<HomePage> {
     if (path != null) {
       final file = File(path);
       final content = await file.readAsString();
-      context.read<DialogProvider>().loadFromText(content, path);
+      if (context.mounted) {
+        context.read<DialogProvider>().loadFromText(content, path);
+      }
     }
   }
 
@@ -84,7 +86,9 @@ class _HomePageState extends State<HomePage> {
       final filePath = result.files.single.path!;
       final file = File(filePath);
       final content = await file.readAsString();
-      context.read<DialogProvider>().loadFromText(content, filePath);
+      if (context.mounted) {
+        context.read<DialogProvider>().loadFromText(content, filePath);
+      }
     }
   }
 
