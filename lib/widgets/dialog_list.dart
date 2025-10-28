@@ -29,6 +29,7 @@ class DialogList extends StatelessWidget {
               title: Text(
                 "${line.actor}: ${line.text}",
                 style: TextStyle(
+                  fontSize: provider.fontSize,
                   decoration:
                       line.isDone
                           ? TextDecoration.lineThrough
