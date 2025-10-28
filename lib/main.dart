@@ -150,6 +150,9 @@ class DialogProvider extends ChangeNotifier {
   String? selectedActor;
   String? _currentFilePath;
   double fontSize = 16.0;
+  bool _filterByActor = false;
+
+  bool get filterByActor => _filterByActor;
 
   void loadFromText(String text, String filePath) {
     dialogs = Parser.parse(text);
@@ -188,6 +191,11 @@ class DialogProvider extends ChangeNotifier {
 
   void changeFontSize(double newSize) {
     fontSize = newSize;
+    notifyListeners();
+  }
+
+  void toggleFilterByActor() {
+    _filterByActor = !_filterByActor;
     notifyListeners();
   }
 

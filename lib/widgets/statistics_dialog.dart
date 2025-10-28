@@ -29,7 +29,7 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
     final provider = context.read<DialogProvider>();
     final rate = double.tryParse(_rateController.text) ?? 0;
     setState(() {
-      _totalPayment = rate * provider.doneDialogs;
+      _totalPayment = rate * provider.totalDialogs;
     });
   }
 
@@ -44,18 +44,6 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Text('تعداد کل دیالوگ‌ها: ${provider.totalDialogs}'),
-            Text('تعداد دیالوگ‌های خوانده شده: ${provider.doneDialogs}'),
-            Text('درصد پیشرفت: ${provider.totalPercent.toStringAsFixed(2)}%'),
-            const Divider(),
-            ...actors.map((actor) {
-              final rate = double.tryParse(_rateController.text) ?? 0;
-              final payment = provider.actorDone(actor) * rate;
-              return Text(
-                '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%) - ${payment.toStringAsFixed(2)} لیر',
-              );
-            }),
-            const Divider(),
             TextField(
               controller: _rateController,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -65,6 +53,18 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
               ),
             ),
             const SizedBox(height: 16),
+            Text('تعداد کل دیالوگ‌ها: ${provider.totalDialogs}'),
+            Text('تعداد دیالوگ‌های خوانده شده: ${provider.doneDialogs}'),
+            Text('درصد پیشرفت: ${provider.totalPercent.toStringAsFixed(2)}%'),
+            const Divider(),
+            ...actors.map((actor) {
+              final rate = double.tryParse(_rateController.text) ?? 0;
+              final payment = provider.actorTotal(actor) * rate;
+              return Text(
+                '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%) - ${payment.toStringAsFixed(2)} لیر',
+              );
+            }),
+            const Divider(),
             Text('مبلغ کل پرداختی: ${_totalPayment.toStringAsFixed(2)} لیر'),
           ],
         ),
