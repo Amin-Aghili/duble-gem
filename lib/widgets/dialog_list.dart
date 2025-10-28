@@ -7,11 +7,16 @@ class DialogList extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<DialogProvider>();
     final dialogs = provider.dialogs;
+    final selectedActor = provider.selectedActor;
+
+    final displayedDialogs = (provider.filterByActor && selectedActor != null)
+        ? dialogs.where((d) => d.actor == selectedActor).toList()
+        : dialogs;
 
     return ListView.builder(
-      itemCount: dialogs.length,
+      itemCount: displayedDialogs.length,
       itemBuilder: (context, i) {
-        final line = dialogs[i];
+        final line = displayedDialogs[i];
         final selected = provider.selectedActor;
 
         // اگر بازیگری انتخاب نشده، همه پررنگ باشن

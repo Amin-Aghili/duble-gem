@@ -50,6 +50,14 @@ class ActorSelector extends StatelessWidget {
             style: const TextStyle(fontSize: 14, color: Colors.black),
             isDense: true,
           ),
+          const SizedBox(width: 16),
+          Checkbox(
+            value: provider.filterByActor,
+            onChanged: (val) {
+              provider.toggleFilterByActor();
+            },
+          ),
+          const Text('فقط این بازیگر'),
           const Spacer(),
           const Text('سایز فونت'),
           Expanded(
