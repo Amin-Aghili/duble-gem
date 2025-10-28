@@ -106,7 +106,13 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => const StatisticsDialog(),
+
+                builder:
+                    (_) => ChangeNotifierProvider.value(
+                      value: context.read<DialogProvider>(),
+
+                      child: const StatisticsDialog(),
+                    ),
               );
             },
           ),
