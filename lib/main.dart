@@ -145,6 +145,7 @@ class DialogProvider extends ChangeNotifier {
   List<DialogLine> dialogs = [];
   String? selectedActor;
   String? _currentFilePath;
+  double fontSize = 16.0;
 
   void loadFromText(String text, String filePath) {
     dialogs = Parser.parse(text);
