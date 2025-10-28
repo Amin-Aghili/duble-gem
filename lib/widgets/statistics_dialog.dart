@@ -37,7 +37,6 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
   Widget build(BuildContext context) {
     final provider = context.watch<DialogProvider>();
     final actors = provider.dialogs.map((e) => e.actor).toSet().toList()..sort();
-    final rate = double.tryParse(_rateController.text) ?? 0;
 
     return AlertDialog(
       title: const Text('آمار'),
@@ -48,11 +47,8 @@ class _StatisticsDialogState extends State<StatisticsDialog> {
             Text('تعداد دیالوگ‌های خوانده شده: ${provider.doneDialogs}'),
             Text('درصد پیشرفت: ${provider.totalPercent.toStringAsFixed(2)}%'),
             const Divider(),
-            ...actors.map((actor) {
-              final actorPayment = rate * provider.actorDone(actor);
-              return Text(
-                  '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} - پرداختی: ${actorPayment.toStringAsFixed(2)} تومان');
-            }),
+            ...actors.map((actor) => Text(
+                '$actor: ${provider.actorDone(actor)} / ${provider.actorTotal(actor)} (${provider.actorPercent(actor).toStringAsFixed(2)}%)')),
             const Divider(),
             TextField(
               controller: _rateController,

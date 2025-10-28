@@ -106,10 +106,13 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (_) => ChangeNotifierProvider.value(
-                  value: context.read<DialogProvider>(),
-                  child: const StatisticsDialog(),
-                ),
+
+                builder:
+                    (_) => ChangeNotifierProvider.value(
+                      value: context.read<DialogProvider>(),
+
+                      child: const StatisticsDialog(),
+                    ),
               );
             },
           ),
@@ -142,23 +145,6 @@ class DialogProvider extends ChangeNotifier {
   List<DialogLine> dialogs = [];
   String? selectedActor;
   String? _currentFilePath;
-  double _fontSize = 14.0;
-
-  double get fontSize => _fontSize;
-
-  void increaseFontSize() {
-    if (_fontSize < 24.0) { // Add an upper limit
-      _fontSize += 1.0;
-      notifyListeners();
-    }
-  }
-
-  void decreaseFontSize() {
-    if (_fontSize > 8.0) { // Add a lower limit
-      _fontSize -= 1.0;
-      notifyListeners();
-    }
-  }
 
   void loadFromText(String text, String filePath) {
     dialogs = Parser.parse(text);
