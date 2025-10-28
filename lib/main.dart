@@ -1,9 +1,11 @@
 import 'package:duble_gem/models/dialog_line.dart';
+import 'package:duble_gem/services/file_service.dart';
 import 'package:duble_gem/services/parser.dart';
 import 'package:duble_gem/utils/theme.dart';
 import 'package:duble_gem/widgets/actore_selector.dart';
 import 'package:duble_gem/widgets/dialog_list.dart';
 import 'package:duble_gem/widgets/stats_bar.dart';
+import 'package:duble_gem/widgets/statistics_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -48,9 +50,30 @@ class _DubbingAppState extends State<DubbingApp> {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final VoidCallback onThemeChanged;
   const HomePage({super.key, required this.onThemeChanged});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _loadLastOpenedFile();
+  }
+
+  Future<void> _loadLastOpenedFile() async {
+    final fileService = FileService();
+    final path = await fileService.getLastOpenedFile();
+    if (path != null) {
+      final file = File(path);
+      final content = await file.readAsString();
+      context.read<DialogProvider>().loadFromText(content, path);
+    }
+  }
 
   Future<void> pickFile(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles(
@@ -58,9 +81,10 @@ class HomePage extends StatelessWidget {
       allowedExtensions: ['txt'],
     );
     if (result != null && result.files.single.path != null) {
-      final file = File(result.files.single.path!);
+      final filePath = result.files.single.path!;
+      final file = File(filePath);
       final content = await file.readAsString();
-      context.read<DialogProvider>().loadFromText(content);
+      context.read<DialogProvider>().loadFromText(content, filePath);
     }
   }
 
@@ -75,7 +99,16 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
-            onPressed: onThemeChanged,
+            onPressed: widget.onThemeChanged,
+          ),
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => const StatisticsDialog(),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(Icons.folder_open),
@@ -105,16 +138,36 @@ class HomePage extends StatelessWidget {
 class DialogProvider extends ChangeNotifier {
   List<DialogLine> dialogs = [];
   String? selectedActor;
+  String? _currentFilePath;
 
-  void loadFromText(String text) {
+  void loadFromText(String text, String filePath) {
     dialogs = Parser.parse(text);
     selectedActor = null;
+    _currentFilePath = filePath;
+    _saveLastOpenedFile(filePath);
     notifyListeners();
   }
 
   void toggleDialog(DialogLine line) {
     line.isDone = !line.isDone;
+    _saveChanges();
     notifyListeners();
+  }
+
+  Future<void> _saveChanges() async {
+    if (_currentFilePath == null) return;
+    try {
+      final file = File(_currentFilePath!);
+      final content = dialogs.map((line) => line.toFileFormat()).join('\n');
+      await file.writeAsString(content);
+    } catch (e) {
+      print("Error saving file: $e");
+    }
+  }
+
+  Future<void> _saveLastOpenedFile(String path) async {
+    final fileService = FileService();
+    await fileService.saveLastOpenedFile(path);
   }
 
   void selectActor(String? actor) {
