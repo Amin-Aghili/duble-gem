@@ -37,16 +37,32 @@ class ActorSelector extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
-      child: DropdownButton<String?>(
-        value: provider.selectedActor, // این مقدار از نوع String? است
-        items: items,
-        hint: const Text('انتخاب بازیگر'),
-        onChanged: (val) {
-          provider.selectActor(val);
-        },
-        itemHeight: 48,
-        style: const TextStyle(fontSize: 14, color: Colors.black),
-        isDense: true,
+      child: Row(
+        children: [
+          DropdownButton<String?>(
+            value: provider.selectedActor, // این مقدار از نوع String? است
+            items: items,
+            hint: const Text('انتخاب بازیگر'),
+            onChanged: (val) {
+              provider.selectActor(val);
+            },
+            itemHeight: 48,
+            style: const TextStyle(fontSize: 14, color: Colors.black),
+            isDense: true,
+          ),
+          const Spacer(),
+          const Text('سایز فونت'),
+          Expanded(
+            child: Slider(
+              value: provider.fontSize,
+              min: 12,
+              max: 30,
+              onChanged: (val) {
+                provider.changeFontSize(val);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

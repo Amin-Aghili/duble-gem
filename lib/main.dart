@@ -182,6 +182,11 @@ class DialogProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeFontSize(double newSize) {
+    fontSize = newSize;
+    notifyListeners();
+  }
+
   // --- آمار کلی ---
   int get totalDialogs => dialogs.length;
   int get doneDialogs => dialogs.where((d) => d.isDone).length;
